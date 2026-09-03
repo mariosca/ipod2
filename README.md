@@ -1,3 +1,14 @@
+# Progetti web in questo repository
+
+| Cartella | Sito |
+| --- | --- |
+| radice (`index.html`, `annuncio.html`, `vendi.html`) | **Claude RC** — mercatino dell'usato per il modellismo radiocomandato |
+| [`sito-personale/`](sito-personale/) | **Sito personale** — portfolio editoriale a sezioni con schede di progetto |
+
+Entrambi sono statici, senza build e senza dipendenze esterne.
+
+---
+
 # Claude RC — mercatino dell'usato per il modellismo radiocomandato
 
 Sito web statico per annunci di modellismo RC di seconda mano: auto, droni FPV,
