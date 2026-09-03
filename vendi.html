@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pubblica un annuncio — Claude RC</title>
+<meta name="description" content="Pubblica gratis il tuo annuncio di modellismo radiocomandato usato su Claude RC.">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23e2562b'/%3E%3Ccircle cx='16' cy='16' r='5' fill='white'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+<script src="assets/js/listings.js" defer></script>
+<script src="assets/js/common.js" defer></script>
+<script src="assets/js/sell.js" defer></script>
+</head>
+<body>
+
+<header class="header">
+  <div class="contenitore header__barra">
+    <a class="marchio" href="index.html">
+      <span class="marchio__segno" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 3.5a8.5 8.5 0 0 1 8.5 8.5h-2.4A6.1 6.1 0 0 0 12 5.9V3.5z"/><path d="M12 20.5A8.5 8.5 0 0 1 3.5 12h2.4A6.1 6.1 0 0 0 12 18.1v2.4z"/></svg>
+      </span>
+      <span>Claude RC<small>usato radiocomandato</small></span>
+    </a>
+
+    <button class="menu-mobile bottone bottone--fantasma" type="button" data-apri-menu aria-expanded="false" aria-label="Apri il menu">☰</button>
+
+    <nav class="nav" data-menu aria-label="Navigazione principale">
+      <a href="index.html">Annunci</a>
+      <a href="index.html#come-funziona">Come funziona</a>
+      <a class="nav__preferiti" href="index.html?preferiti=1">
+        Preferiti <span class="pallino" data-conta-preferiti hidden></span>
+      </a>
+      <button class="tema" type="button" data-cambia-tema aria-label="Cambia tema">
+        <svg viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0-6.5a1 1 0 0 1 1 1v2.2a1 1 0 0 1-2 0V2a1 1 0 0 1 1-1zm0 18.6a1 1 0 0 1 1 1V23a1 1 0 0 1-2 0v-1.9a1 1 0 0 1 1-1zM1 12a1 1 0 0 1 1-1h2.2a1 1 0 0 1 0 2H2a1 1 0 0 1-1-1zm18.8 0a1 1 0 0 1 1-1H23a1 1 0 0 1 0 2h-2.2a1 1 0 0 1-1-1zM4.6 4.6a1 1 0 0 1 1.4 0l1.5 1.5A1 1 0 0 1 6.1 7.5L4.6 6a1 1 0 0 1 0-1.4zm12.3 12.3a1 1 0 0 1 1.4 0L19.8 18.4a1 1 0 0 1-1.4 1.4l-1.5-1.5a1 1 0 0 1 0-1.4zM19.8 4.6a1 1 0 0 1 0 1.4l-1.5 1.5a1 1 0 0 1-1.4-1.4l1.5-1.5a1 1 0 0 1 1.4 0zM7.5 16.9a1 1 0 0 1 0 1.4L6 19.8a1 1 0 0 1-1.4-1.4l1.5-1.5a1 1 0 0 1 1.4 0z"/></svg>
+      </button>
+      <a class="bottone" href="vendi.html" aria-current="page">Vendi il tuo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="contenitore form-pagina">
+  <h1>Pubblica il tuo annuncio</h1>
+  <p style="color:var(--testo-tenue)">Gratis e senza registrazione. Più dettagli metti su condizione e
+    dotazione, meno domande ricevi e prima vendi.</p>
+
+  <p class="esito" data-esito hidden></p>
+
+  <form data-form-vendi novalidate>
+    <div class="campo">
+      <label for="titolo">Titolo dell'annuncio *</label>
+      <input type="text" id="titolo" name="titolo" maxlength="90"
+             placeholder="Es. Buggy 1/8 brushless con 2 batterie" required>
+      <p class="aiuto">Modello, scala e la caratteristica che conta di più.</p>
+      <p class="errore" data-errore="titolo" hidden></p>
+    </div>
+
+    <div class="campi-2">
+      <div class="campo">
+        <label for="categoria">Categoria *</label>
+        <select id="categoria" name="categoria" data-select-categoria required></select>
+        <p class="errore" data-errore="categoria" hidden></p>
+      </div>
+      <div class="campo">
+        <label for="condizione">Condizione *</label>
+        <select id="condizione" name="condizione" required>
+          <option value="Ottimo">Ottimo — come nuovo</option>
+          <option value="Buono" selected>Buono — segni d'uso normali</option>
+          <option value="Da riparare">Da riparare — non pienamente funzionante</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="campi-2">
+      <div class="campo">
+        <label for="prezzo">Prezzo in euro *</label>
+        <input type="number" id="prezzo" name="prezzo" min="0" step="1" placeholder="180" required>
+        <p class="errore" data-errore="prezzo" hidden></p>
+      </div>
+      <div class="campo">
+        <label for="citta">Città *</label>
+        <input type="text" id="citta" name="citta" placeholder="Torino" required>
+        <p class="errore" data-errore="citta" hidden></p>
+      </div>
+    </div>
+
+    <div class="campi-2">
+      <div class="campo">
+        <label for="regione">Regione *</label>
+        <select id="regione" name="regione" data-select-regione required></select>
+      </div>
+      <div class="campo">
+        <label for="nome">Il tuo nome *</label>
+        <input type="text" id="nome" name="nome" placeholder="Mario R." required>
+        <p class="errore" data-errore="nome" hidden></p>
+      </div>
+    </div>
+
+    <div class="campo">
+      <label for="descrizione">Descrizione *</label>
+      <textarea id="descrizione" name="descrizione" minlength="30"
+        placeholder="Come è stato usato, cosa hai sostituito, eventuali difetti da segnalare…" required></textarea>
+      <p class="aiuto">Almeno 30 caratteri. Dichiara i difetti: evita resi e discussioni.</p>
+      <p class="errore" data-errore="descrizione" hidden></p>
+    </div>
+
+    <div class="campo">
+      <label for="dotazione">Cosa è incluso</label>
+      <textarea id="dotazione" name="dotazione" style="min-height:90px"
+        placeholder="Un elemento per riga: telaio, radio, 2 batterie 3S, caricatore…"></textarea>
+    </div>
+
+    <div class="campo">
+      <label class="opzione"><input type="checkbox" name="spedizione" checked> Disponibile a spedire</label>
+      <label class="opzione"><input type="checkbox" name="trattabile" checked> Prezzo trattabile</label>
+    </div>
+
+    <div class="azioni">
+      <button class="bottone" type="submit">Pubblica annuncio</button>
+      <a class="bottone bottone--fantasma" href="index.html">Annulla</a>
+    </div>
+
+    <p class="avviso">Demo: l'annuncio viene salvato nel tuo browser e compare in cima all'elenco
+      con l'etichetta "Il tuo annuncio". Nessun dato viene inviato a un server.</p>
+  </form>
+
+  <section style="margin-top:34px">
+    <h2>I tuoi annunci pubblicati</h2>
+    <div class="griglia" data-miei-annunci></div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="contenitore">
+    <p class="footer__fondo" style="margin:0;border:0;padding:0">
+      Claude RC — progetto dimostrativo. <a href="index.html">Torna agli annunci</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
