@@ -4,8 +4,10 @@
 | --- | --- |
 | radice (`index.html`, `annuncio.html`, `vendi.html`) | **Claude RC** — mercatino dell'usato per il modellismo radiocomandato |
 | [`sito-personale/`](sito-personale/) | **Sito personale** — portfolio editoriale a sezioni con schede di progetto |
+| [`albo-pretorio/`](albo-pretorio/) | **Albo Pretorio** — web app Python che estrae e rende consultabili tutti gli atti pubblicati sull'albo pretorio on line del Comune di Città di Castello |
 
-Entrambi sono statici, senza build e senza dipendenze esterne.
+I primi due sono statici, senza build e senza dipendenze esterne; l'albo pretorio ha un
+piccolo server Flask (vedi il suo README).
 
 ---
 

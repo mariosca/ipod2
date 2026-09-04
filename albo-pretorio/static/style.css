@@ -1,0 +1,184 @@
+/* Albo Pretorio - foglio di stile unico, nessuna dipendenza esterna. */
+
+:root {
+  --sfondo: #f4f5f7;
+  --superficie: #ffffff;
+  --superficie-2: #eceff3;
+  --bordo: #d9dee6;
+  --testo: #15181f;
+  --testo-tenue: #5d6473;
+  --accento: #1d4ed8;
+  --accento-scuro: #1e40af;
+  --accento-tenue: #e6edff;
+  --su-accento: #ffffff;
+  --positivo: #15803d;
+  --positivo-tenue: #dcfce7;
+  --avviso: #b45309;
+  --avviso-tenue: #fef3c7;
+  --negativo: #b91c1c;
+  --negativo-tenue: #fee2e2;
+  --ombra: 0 1px 2px rgba(16, 20, 30, .06), 0 6px 20px rgba(16, 20, 30, .06);
+  --raggio: 12px;
+  --raggio-s: 8px;
+  --max: 1240px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="chiaro"]) {
+    --sfondo: #0e1117;
+    --superficie: #171b23;
+    --superficie-2: #1f242e;
+    --bordo: #2b323e;
+    --testo: #eef1f6;
+    --testo-tenue: #9aa3b4;
+    --accento: #7aa2ff;
+    --accento-scuro: #9ab8ff;
+    --accento-tenue: #1a2440;
+    --su-accento: #0b1020;
+    --positivo: #4ade80;
+    --positivo-tenue: #12261b;
+    --avviso: #fbbf24;
+    --avviso-tenue: #2c2110;
+    --negativo: #f87171;
+    --negativo-tenue: #2c1414;
+    --ombra: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+    color-scheme: dark;
+  }
+}
+
+:root[data-tema="scuro"] {
+  --sfondo: #0e1117;
+  --superficie: #171b23;
+  --superficie-2: #1f242e;
+  --bordo: #2b323e;
+  --testo: #eef1f6;
+  --testo-tenue: #9aa3b4;
+  --accento: #7aa2ff;
+  --accento-scuro: #9ab8ff;
+  --accento-tenue: #1a2440;
+  --su-accento: #0b1020;
+  --positivo: #4ade80;
+  --positivo-tenue: #12261b;
+  --avviso: #fbbf24;
+  --avviso-tenue: #2c2110;
+  --negativo: #f87171;
+  --negativo-tenue: #2c1414;
+  --ombra: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  color: var(--testo);
+  background: var(--sfondo);
+}
+a { color: var(--accento); }
+h1, h2 { margin: 0; line-height: 1.2; }
+h1 { font-size: 1.3rem; }
+h2 { font-size: 1.05rem; }
+p { margin: 0; }
+.tenue { color: var(--testo-tenue); }
+.errore { color: var(--negativo); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+[hidden] { display: none !important; }
+
+.contenitore { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+/* ---------- testata ---------- */
+.testata { background: var(--superficie); border-bottom: 1px solid var(--bordo); position: sticky; top: 0; z-index: 5; }
+.testata-riga { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 20px; flex-wrap: wrap; }
+.marchio { display: flex; align-items: center; gap: 12px; }
+.marchio-icona {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px;
+  background: var(--accento); color: var(--su-accento); font-weight: 700; font-size: 1.3rem;
+}
+.marchio p { font-size: .85rem; }
+.testata-azioni { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.campo-inline { display: flex; align-items: center; gap: 8px; }
+
+/* ---------- pannelli ---------- */
+main { padding: 20px 20px 40px; display: grid; gap: 16px; }
+.pannello { background: var(--superficie); border: 1px solid var(--bordo); border-radius: var(--raggio); box-shadow: var(--ombra); }
+.stato { display: flex; justify-content: space-between; gap: 20px; padding: 16px 20px; flex-wrap: wrap; align-items: center; }
+.stato-testo { display: grid; gap: 4px; min-width: 260px; flex: 1; }
+.stato-azioni { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.progresso { display: grid; gap: 4px; margin-top: 6px; max-width: 520px; }
+.barra { height: 8px; background: var(--superficie-2); border-radius: 99px; overflow: hidden; }
+.barra-riempimento { height: 100%; width: 0; background: var(--accento); border-radius: 99px; transition: width .4s ease; }
+.barra-riempimento.indeterminata { width: 35%; animation: scorri 1.2s infinite linear; }
+@keyframes scorri { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+
+.filtri { padding: 14px 20px; display: grid; gap: 10px; }
+.filtri-riga { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+.filtri-riga.secondaria { align-items: center; }
+.campo { display: grid; gap: 4px; }
+.campo.cresce { flex: 1 1 260px; }
+.etichetta { font-size: .78rem; color: var(--testo-tenue); text-transform: uppercase; letter-spacing: .03em; }
+.spunta { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.spinta { flex: 1; }
+
+input, select, button { font: inherit; color: inherit; }
+input[type="search"], input[type="date"], input[type="text"], select {
+  padding: 8px 10px; border: 1px solid var(--bordo); border-radius: var(--raggio-s);
+  background: var(--superficie); min-width: 0;
+}
+input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--accento); outline-offset: 2px; }
+
+.pulsante {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--raggio-s);
+  border: 1px solid var(--bordo); background: var(--superficie); cursor: pointer; text-decoration: none; white-space: nowrap;
+}
+.pulsante:hover { background: var(--superficie-2); }
+.pulsante.primario { background: var(--accento); border-color: var(--accento); color: var(--su-accento); font-weight: 600; }
+.pulsante.primario:hover { background: var(--accento-scuro); }
+.pulsante.primario:disabled { opacity: .6; cursor: progress; }
+.pulsante.secondario { color: var(--testo); }
+.pulsante.icona { padding: 6px 10px; line-height: 1; }
+
+/* ---------- tabella ---------- */
+.tabella-contenitore { overflow: hidden; }
+.scorri { overflow-x: auto; }
+table.atti { width: 100%; border-collapse: collapse; }
+table.atti th, table.atti td { text-align: left; padding: 10px 12px; vertical-align: top; border-bottom: 1px solid var(--bordo); }
+table.atti thead th { font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; color: var(--testo-tenue); background: var(--superficie-2); position: sticky; top: 0; }
+table.atti tbody tr.riga:hover { background: color-mix(in srgb, var(--accento-tenue) 55%, transparent); }
+td.numero { white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.dal, td.al { white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.oggetto { min-width: 320px; }
+.oggetto-link { color: inherit; text-decoration: none; font-weight: 500; }
+.oggetto-link:hover { color: var(--accento); text-decoration: underline; }
+td.oggetto .ente { display: block; font-size: .82rem; margin-top: 2px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 99px; background: var(--accento-tenue); color: var(--accento-scuro); font-size: .8rem; white-space: nowrap; }
+.badge.scaduto { background: var(--superficie-2); color: var(--testo-tenue); }
+.badge.scadenza { background: var(--avviso-tenue); color: var(--avviso); }
+.badge.attivo { background: var(--positivo-tenue); color: var(--positivo); }
+td.allegati a { display: block; font-size: .85rem; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+td.allegati .altri { font-size: .8rem; }
+tr.riga.scaduta td.oggetto, tr.riga.scaduta td.numero { color: var(--testo-tenue); }
+
+tr.dettaglio td { background: var(--superficie-2); padding: 14px 20px; }
+.dettaglio-griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px 24px; }
+.dettaglio-griglia dt { font-size: .75rem; text-transform: uppercase; letter-spacing: .03em; color: var(--testo-tenue); }
+.dettaglio-griglia dd { margin: 0 0 4px; overflow-wrap: anywhere; }
+.dettaglio-allegati { margin: 12px 0 0; padding-left: 18px; }
+.dettaglio-azioni { margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+.vuoto { padding: 40px 20px; text-align: center; color: var(--testo-tenue); }
+.pie { padding: 0 20px 30px; font-size: .85rem; }
+
+@media (max-width: 720px) {
+  table.atti thead { display: none; }
+  table.atti tr.riga { display: grid; grid-template-columns: 1fr auto; padding: 10px 0; }
+  table.atti tr.riga td { border: 0; padding: 4px 14px; }
+  td.oggetto { grid-column: 1 / -1; min-width: 0; order: -1; }
+  td.numero::before { content: "N. "; color: var(--testo-tenue); }
+  td.dal::before { content: "dal "; color: var(--testo-tenue); }
+  td.al::before { content: "al "; color: var(--testo-tenue); }
+  td.allegati { grid-column: 1 / -1; }
+  tr.riga { border-bottom: 1px solid var(--bordo); }
+  tr.dettaglio td { padding: 12px 14px; }
+}

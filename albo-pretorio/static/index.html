@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Albo Pretorio – Città di Castello</title>
+<meta name="description" content="Estrazione e consultazione degli atti pubblicati sull'albo pretorio on line del Comune di Città di Castello.">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="testata">
+  <div class="contenitore testata-riga">
+    <div class="marchio">
+      <span class="marchio-icona" aria-hidden="true">§</span>
+      <div>
+        <h1>Albo Pretorio</h1>
+        <p id="ente" class="tenue">Comune di Città di Castello</p>
+      </div>
+    </div>
+    <div class="testata-azioni">
+      <label class="campo-inline">
+        <span class="etichetta">Sezione</span>
+        <select id="sezione" aria-label="Sezione dell'albo"></select>
+      </label>
+      <a id="link-origine" class="pulsante secondario" href="#" target="_blank" rel="noopener">Apri l'albo ufficiale ↗</a>
+      <button id="tema" class="pulsante icona" type="button" aria-label="Cambia tema" title="Tema chiaro/scuro">◐</button>
+    </div>
+  </div>
+</header>
+
+<main class="contenitore">
+  <section class="pannello stato" aria-labelledby="stato-titolo">
+    <div class="stato-testo">
+      <h2 id="stato-titolo">Archivio locale</h2>
+      <p id="stato-riga" class="tenue">Caricamento…</p>
+      <p id="stato-errore" class="errore" hidden></p>
+      <div id="progresso" class="progresso" hidden>
+        <div class="barra"><div id="progresso-barra" class="barra-riempimento"></div></div>
+        <span id="progresso-testo" class="tenue"></span>
+      </div>
+    </div>
+    <form id="form-aggiorna" class="stato-azioni">
+      <label class="spunta"><input type="checkbox" id="opz-dettagli" checked> Scarica anche dettagli e allegati</label>
+      <label class="spunta"><input type="checkbox" id="opz-csv" checked> Integra con l'export CSV del portale</label>
+      <button id="aggiorna" class="pulsante primario" type="submit">Aggiorna dall'albo</button>
+    </form>
+  </section>
+
+  <section class="pannello filtri" aria-label="Filtri">
+    <div class="filtri-riga">
+      <label class="campo cresce">
+        <span class="etichetta">Cerca</span>
+        <input type="search" id="q" placeholder="oggetto, numero, tipologia, ente…" autocomplete="off">
+      </label>
+      <label class="campo">
+        <span class="etichetta">Tipologia</span>
+        <select id="tipo"><option value="">Tutte</option></select>
+      </label>
+      <label class="campo">
+        <span class="etichetta">Pubblicato dal</span>
+        <input type="date" id="da">
+      </label>
+      <label class="campo">
+        <span class="etichetta">al</span>
+        <input type="date" id="a">
+      </label>
+      <label class="campo">
+        <span class="etichetta">Ordina</span>
+        <select id="ordine">
+          <option value="data_desc">Più recenti</option>
+          <option value="data_asc">Meno recenti</option>
+          <option value="scadenza">In scadenza</option>
+          <option value="numero">Numero registro</option>
+          <option value="tipo">Tipologia</option>
+        </select>
+      </label>
+    </div>
+    <div class="filtri-riga secondaria">
+      <label class="spunta"><input type="checkbox" id="solo-pubblicati"> Solo atti attualmente in pubblicazione</label>
+      <span id="conteggio" class="tenue"></span>
+      <span class="spinta"></span>
+      <button id="azzera" class="pulsante secondario" type="button">Azzera filtri</button>
+      <a id="export-csv" class="pulsante secondario" href="/api/export?formato=csv" download>Esporta CSV</a>
+      <a id="export-json" class="pulsante secondario" href="/api/export?formato=json" download>Esporta JSON</a>
+    </div>
+  </section>
+
+  <section class="pannello tabella-contenitore" aria-label="Atti">
+    <div class="scorri">
+      <table id="tabella" class="atti">
+        <thead>
+          <tr>
+            <th scope="col">N. registro</th>
+            <th scope="col">Tipologia</th>
+            <th scope="col">Oggetto</th>
+            <th scope="col">Dal</th>
+            <th scope="col">Al</th>
+            <th scope="col">Allegati</th>
+            <th scope="col"><span class="visually-hidden">Dettaglio</span></th>
+          </tr>
+        </thead>
+        <tbody id="righe"></tbody>
+      </table>
+    </div>
+    <p id="vuoto" class="vuoto" hidden></p>
+  </section>
+</main>
+
+<footer class="pie contenitore tenue">
+  <p>I dati provengono dall'<a id="link-origine-pie" href="#" target="_blank" rel="noopener">albo pretorio on line</a> dell'ente e sono conservati in un archivio locale: fanno fede esclusivamente le pubblicazioni ufficiali.</p>
+</footer>
+
+<template id="tpl-riga">
+  <tr class="riga">
+    <td class="numero"></td>
+    <td class="tipo"><span class="badge"></span></td>
+    <td class="oggetto"><a class="oggetto-link" target="_blank" rel="noopener"></a><span class="ente tenue"></span></td>
+    <td class="dal"></td>
+    <td class="al"></td>
+    <td class="allegati"></td>
+    <td class="azioni"><button type="button" class="pulsante icona espandi" aria-expanded="false" aria-label="Mostra dettagli">+</button></td>
+  </tr>
+</template>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
