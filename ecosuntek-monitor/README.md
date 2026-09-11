@@ -22,16 +22,31 @@ Nessun framework, nessuna build, nessuna dipendenza esterna.
 
 ## Come si avvia
 
+### Online, senza installare nulla (consigliato)
+
+Il workflow GitHub Actions `.github/workflows/ecosuntek-monitor.yml` scarica ogni ora,
+nei giorni di Borsa, le quotazioni da Yahoo Finance e le salva in `data/ECK.MI.json`;
+poi pubblica l'app su GitHub Pages. Per attivarlo, una volta sola:
+
+1. porta questa cartella e il workflow sul branch predefinito del repository (`main`);
+2. su GitHub apri **Settings → Pages** e in *Build and deployment* scegli **Source: GitHub Actions**;
+3. in **Actions → Ecosuntek Monitor** premi *Run workflow* (oppure aspetta la prossima ora).
+
+L'app sarà su `https://<utente>.github.io/<repository>/ecosuntek-monitor/`.
+
+### In locale
+
 I dati arrivano dall'API pubblica di Yahoo Finance, che non consente richieste dirette da
 un altro dominio (CORS). L'app prova in sequenza più sorgenti:
 
-1. il **proxy locale** `/api/chart` (vedi sotto);
-2. Yahoo Finance in diretta;
-3. i proxy CORS pubblici `corsproxy.io` e `allorigins.win`;
-4. l'ultimo aggiornamento salvato nel browser;
-5. **dati dimostrativi simulati**, segnalati con un avviso ben visibile.
+1. il file `data/<SIMBOLO>.json` salvato nel repository dal workflow (se ha meno di 2 giorni);
+2. il **proxy locale** `/api/chart` (vedi sotto);
+3. Yahoo Finance in diretta;
+4. i proxy CORS pubblici `corsproxy.io` e `allorigins.win`;
+5. il file del repository anche se vecchio, poi l'ultimo aggiornamento salvato nel browser;
+6. **dati dimostrativi simulati**, segnalati con un avviso ben visibile.
 
-Il modo più affidabile è il server locale, che serve la pagina e fa da proxy:
+Il server locale serve la pagina e fa da proxy:
 
 ```bash
 cd ecosuntek-monitor
@@ -39,7 +54,7 @@ python3 server.py
 # poi apri http://localhost:8000
 ```
 
-Pubblicata su GitHub Pages o altro hosting statico, l'app usa i proxy CORS pubblici.
+Per aggiornare a mano il file del repository: `python3 fetch_data.py` (crea `data/ECK.MI.json`).
 In alternativa si può **importare un CSV** (pulsante «Importa CSV») esportato da Yahoo Finance
 o da Borsa Italiana: separatori `,` `;` e virgole decimali sono riconosciuti in automatico.
 
@@ -56,5 +71,7 @@ Aggiungi `?symbol=TICKER` all'indirizzo, ad esempio `index.html?symbol=ENI.MI`.
 | `app.js` | Caricamento dati, statistiche, riassunto, grafici e tabella |
 | `demo-data.js` | Serie simulata usata solo quando nessuna sorgente è raggiungibile |
 | `server.py` | Server statico + proxy verso Yahoo Finance (solo libreria standard) |
+| `fetch_data.py` | Scarica lo storico e lo salva in `data/<SIMBOLO>.json` (usato dal workflow) |
+| `data/` | Quotazioni salvate dal workflow GitHub Actions |
 
 Le informazioni sono a solo scopo informativo e non costituiscono consulenza finanziaria.
