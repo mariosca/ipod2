@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ecosuntek Monitor</title>
+<meta name="description" content="Monitoraggio del titolo Ecosuntek (ECK, Euronext Growth Milan) con riassunto automatico delle oscillazioni giornaliere.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">◆</span>
+    <div>
+      <h1>Ecosuntek Monitor</h1>
+      <p class="brand-sub"><span id="symbol-label">ECK.MI</span> · Euronext Growth Milan · <span id="currency-label">EUR</span></p>
+    </div>
+  </div>
+  <div class="status" aria-live="polite">
+    <span id="status-dot" class="dot dot-idle" aria-hidden="true"></span>
+    <span id="status-text">In attesa dei dati…</span>
+  </div>
+</header>
+
+<main>
+  <div id="banner" class="banner" hidden></div>
+
+  <section class="filters" aria-label="Filtri">
+    <div class="range-group" role="group" aria-label="Periodo">
+      <button type="button" class="range-btn" data-range="5">1 sett.</button>
+      <button type="button" class="range-btn" data-range="22">1 mese</button>
+      <button type="button" class="range-btn is-active" data-range="66">3 mesi</button>
+      <button type="button" class="range-btn" data-range="130">6 mesi</button>
+      <button type="button" class="range-btn" data-range="260">1 anno</button>
+    </div>
+    <div class="filters-right">
+      <label class="check"><input type="checkbox" id="auto-refresh" checked> Aggiorna ogni 5 min</label>
+      <button type="button" id="btn-refresh" class="btn">↻ Aggiorna</button>
+      <button type="button" id="btn-import" class="btn btn-ghost">Importa CSV</button>
+    </div>
+  </section>
+
+  <section class="tiles" aria-label="Dati di sintesi">
+    <article class="tile tile-hero">
+      <p class="tile-label">Ultimo prezzo</p>
+      <p class="tile-value hero" id="t-price">—</p>
+      <p class="tile-delta" id="t-delta">—</p>
+    </article>
+    <article class="tile">
+      <p class="tile-label">Apertura</p>
+      <p class="tile-value" id="t-open">—</p>
+      <p class="tile-note" id="t-open-note">—</p>
+    </article>
+    <article class="tile">
+      <p class="tile-label">Minimo / massimo di seduta</p>
+      <p class="tile-value" id="t-range">—</p>
+      <p class="tile-note" id="t-range-note">—</p>
+    </article>
+    <article class="tile">
+      <p class="tile-label">Volume</p>
+      <p class="tile-value" id="t-volume">—</p>
+      <p class="tile-note" id="t-volume-note">—</p>
+    </article>
+  </section>
+
+  <section class="card summary" aria-labelledby="summary-title">
+    <h2 id="summary-title">Riassunto delle oscillazioni</h2>
+    <div id="summary" class="summary-body">
+      <p class="muted">Il riassunto compare appena arrivano i dati.</p>
+    </div>
+  </section>
+
+  <section class="charts">
+    <article class="card">
+      <div class="card-head">
+        <h2>Prezzo di chiusura</h2>
+        <p class="muted" id="chart-price-sub">—</p>
+      </div>
+      <div class="chart" id="chart-price"></div>
+    </article>
+    <article class="card">
+      <div class="card-head">
+        <h2>Variazione giornaliera</h2>
+        <p class="muted">Chiusura su chiusura precedente, in %</p>
+      </div>
+      <div class="chart" id="chart-change"></div>
+    </article>
+  </section>
+
+  <section class="card" aria-labelledby="table-title">
+    <div class="card-head">
+      <h2 id="table-title">Sedute del periodo</h2>
+      <p class="muted" id="table-sub">—</p>
+    </div>
+    <div class="table-wrap">
+      <table id="table">
+        <thead>
+          <tr>
+            <th scope="col">Data</th>
+            <th scope="col" class="num">Apertura</th>
+            <th scope="col" class="num">Minimo</th>
+            <th scope="col" class="num">Massimo</th>
+            <th scope="col" class="num">Chiusura</th>
+            <th scope="col" class="num">Var. %</th>
+            <th scope="col" class="num">Escursione</th>
+            <th scope="col" class="num">Volume</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p>Dati di chiusura giornalieri da Yahoo Finance (ritardati). Le informazioni sono a solo scopo informativo e non costituiscono consulenza finanziaria.</p>
+    <p>Cambia titolo con <code>?symbol=ECK.MI</code> nell'indirizzo. <a href="README.md">Istruzioni</a>.</p>
+  </footer>
+</main>
+
+<dialog id="import-dialog">
+  <form method="dialog" class="import-form">
+    <h2>Importa dati da CSV</h2>
+    <p class="muted">Incolla lo storico esportato da Yahoo Finance o da Borsa Italiana. Servono le colonne data, apertura, massimo, minimo, chiusura e, se disponibile, volume. Separatori e virgole decimali vengono riconosciuti automaticamente.</p>
+    <textarea id="import-text" rows="10" placeholder="Date,Open,High,Low,Close,Adj Close,Volume&#10;2026-09-01,1.20,1.25,1.18,1.23,1.23,12000"></textarea>
+    <p id="import-error" class="error" hidden></p>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-ghost" id="import-clear">Torna ai dati online</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn btn-ghost" id="import-cancel">Annulla</button>
+      <button type="button" class="btn" id="import-ok">Importa</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="tooltip" class="tooltip" role="status" hidden></div>
+
+<script src="demo-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -4,8 +4,9 @@
 | --- | --- |
 | radice (`index.html`, `annuncio.html`, `vendi.html`) | **Claude RC** — mercatino dell'usato per il modellismo radiocomandato |
 | [`sito-personale/`](sito-personale/) | **Sito personale** — portfolio editoriale a sezioni con schede di progetto |
+| [`ecosuntek-monitor/`](ecosuntek-monitor/) | **Ecosuntek Monitor** — monitoraggio del titolo ECK con riassunto delle oscillazioni giornaliere |
 
-Entrambi sono statici, senza build e senza dipendenze esterne.
+Tutti sono statici, senza build e senza dipendenze esterne.
 
 ---
 
