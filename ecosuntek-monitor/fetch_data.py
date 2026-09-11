@@ -49,9 +49,21 @@ def main() -> None:
     if not SYMBOL_RE.match(symbol):
         raise SystemExit(f"Simbolo non valido: {symbol}")
     data = fetch(symbol)
-    data["fetchedAt"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    now = datetime.now(timezone.utc)
+    data["fetchedAt"] = now.isoformat(timespec="seconds")
     out = Path(__file__).resolve().parent / "data" / f"{symbol}.json"
     out.parent.mkdir(exist_ok=True)
+    # Se le quotazioni non sono cambiate e il file ha meno di 20 ore, lo lascio com'è:
+    # così il workflow non crea un commit a ogni esecuzione.
+    if out.exists():
+        try:
+            old = json.loads(out.read_text(encoding="utf-8"))
+            old_at = datetime.fromisoformat(old.get("fetchedAt", "1970-01-01T00:00:00+00:00"))
+            if old.get("chart") == data["chart"] and (now - old_at).total_seconds() < 20 * 3600:
+                print(f"{symbol}: quotazioni invariate rispetto a {old_at.isoformat(timespec='minutes')}, file non modificato")
+                return
+        except (ValueError, TypeError):
+            pass
     out.write_text(json.dumps(data, separators=(",", ":")) + "\n", encoding="utf-8")
     n = len(data["chart"]["result"][0]["timestamp"])
     price = data["chart"]["result"][0]["meta"].get("regularMarketPrice")
