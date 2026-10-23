@@ -14,8 +14,11 @@
   const yahooUrl = () =>
     `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(SYMBOL)}?range=${FETCH_RANGE}&interval=1d&events=div,splits`;
 
-  // Sorgenti provate in ordine: proxy locale (server.py), Yahoo diretto, proxy CORS pubblici.
+  // Sorgenti provate in ordine: file salvato nel repository dal workflow GitHub Actions,
+  // proxy locale (server.py), Yahoo diretto, proxy CORS pubblici.
+  const STALE_MS = 2 * 24 * 60 * 60 * 1000; // oltre 2 giorni il file del repository è "vecchio"
   const SOURCES = [
+    { name: 'file del repository', url: () => `data/${encodeURIComponent(SYMBOL)}.json`, repoFile: true },
     { name: 'proxy locale', url: () => `/api/chart?symbol=${encodeURIComponent(SYMBOL)}&range=${FETCH_RANGE}` },
     { name: 'Yahoo Finance', url: yahooUrl },
     { name: 'corsproxy.io', url: () => `https://corsproxy.io/?url=${encodeURIComponent(yahooUrl())}` },
@@ -178,6 +181,16 @@
     setStatus('busy', isManualRefresh ? 'Aggiornamento in corso…' : 'Caricamento dati…');
     document.querySelectorAll('.chart').forEach((c) => c.classList.add('is-stale'));
     const errors = [];
+    let staleRepo = null; // file del repository vecchio: usato solo se le sorgenti online falliscono
+    const useParsed = (src, parsed, fetchedAt) => {
+      currency = parsed.currency;
+      $('currency-label').textContent = currency;
+      applyData(parsed.rows, { source: src.name, fetchedAt, demo: false, manual: false, livePrice: parsed.livePrice, liveTime: parsed.liveTime });
+      localStorage.setItem(CACHE_KEY, JSON.stringify({ rows: parsed.rows, currency, savedAt: fetchedAt.getTime(), source: src.name }));
+      const sameDay = fetchedAt.toDateString() === new Date().toDateString();
+      setStatus('ok', `Aggiornato ${sameDay ? 'alle' : 'il ' + fmtDateLong.format(fetchedAt) + ' alle'} ${fmtTime.format(fetchedAt)} · fonte: ${src.name}`);
+      showBanner('');
+    };
     for (const src of SOURCES) {
       try {
         const r = await fetchWithTimeout(src.url(), 9000);
@@ -185,16 +198,22 @@
         const json = await r.json();
         const parsed = parseYahoo(json);
         if (parsed.rows.length < 2) throw new Error('troppo pochi dati');
-        currency = parsed.currency;
-        $('currency-label').textContent = currency;
-        applyData(parsed.rows, { source: src.name, fetchedAt: new Date(), demo: false, manual: false, livePrice: parsed.livePrice, liveTime: parsed.liveTime });
-        localStorage.setItem(CACHE_KEY, JSON.stringify({ rows: parsed.rows, currency, savedAt: Date.now(), source: src.name }));
-        setStatus('ok', `Aggiornato alle ${fmtTime.format(new Date())} · fonte: ${src.name}`);
-        showBanner('');
+        const fetchedAt = src.repoFile && json.fetchedAt ? new Date(json.fetchedAt) : new Date();
+        if (src.repoFile && Date.now() - fetchedAt.getTime() > STALE_MS) {
+          staleRepo = { src, parsed, fetchedAt };
+          errors.push(`${src.name}: dati del ${fmtDateLong.format(fetchedAt)}, provo le sorgenti online`);
+          continue;
+        }
+        useParsed(src, parsed, fetchedAt);
         return;
       } catch (e) {
         errors.push(`${src.name}: ${e.name === 'AbortError' ? 'timeout' : e.message}`);
       }
+    }
+    if (staleRepo) {
+      useParsed(staleRepo.src, staleRepo.parsed, staleRepo.fetchedAt);
+      setStatus('warn', `Dati del ${fmtDateLong.format(staleRepo.fetchedAt)} (file del repository); sorgenti online non raggiungibili`);
+      return;
     }
 
     // Nessuna sorgente online: cache locale, altrimenti dati dimostrativi.
