@@ -56,6 +56,8 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true   # attiva GitHub Pages (sorgente: GitHub Actions) se non lo è già
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
