@@ -8,6 +8,9 @@ extension Color {
     static let fixBad = Color(red: 0xE2 / 255, green: 0x63 / 255, blue: 0x5A / 255)
     static let ground = Color(red: 0x0A / 255, green: 0x14 / 255, blue: 0x1C / 255)
     static let inkFaint = Color(red: 0x6A / 255, green: 0x84 / 255, blue: 0x93 / 255)
+    /// Fondo dei controlli sopra la mappa: scuro e quasi opaco.
+    static let chrome = Color(red: 0x0A / 255, green: 0x14 / 255, blue: 0x1C / 255).opacity(0.88)
+    static let chromeLine = Color.white.opacity(0.18)
 }
 
 @MainActor
@@ -68,10 +71,10 @@ struct ContentView: View {
         if let credits = mapKind.attribution {
             Link(credits, destination: URL(string: "https://www.openstreetmap.org/copyright")!)
                 .font(.caption2)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.85))
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
-                .background(.ultraThinMaterial, in: Capsule())
+                .background(Color.chrome, in: Capsule())
                 .padding(.horizontal, 16)
         }
     }
@@ -103,7 +106,9 @@ struct ContentView: View {
                 Button(action: recenter) {
                     Image(systemName: "location.fill")
                         .frame(width: 34, height: 34)
-                        .background(.ultraThinMaterial, in: Circle())
+                        .foregroundStyle(Color.beacon)
+                        .background(Color.chrome, in: Circle())
+                        .overlay(Circle().strokeBorder(Color.chromeLine))
                 }
                 .accessibilityLabel("Ricentra sulla mia posizione")
 
@@ -112,15 +117,14 @@ struct ContentView: View {
                 } label: {
                     Image(systemName: "keyboard")
                         .frame(width: 34, height: 34)
-                        .background(.ultraThinMaterial, in: Circle())
+                        .foregroundStyle(Color.beacon)
+                        .background(Color.chrome, in: Circle())
+                        .overlay(Circle().strokeBorder(Color.chromeLine))
                 }
                 .accessibilityLabel("Inserisci coordinate a mano")
             }
 
-            Picker("Tipo di mappa", selection: $mapKind) {
-                ForEach(MapKind.allCases) { Text($0.rawValue).tag($0) }
-            }
-            .pickerStyle(.segmented)
+            mapPicker
         }
         .tint(.beacon)
     }
@@ -133,9 +137,40 @@ struct ContentView: View {
                 .textCase(.uppercase)
                 .lineLimit(1)
         }
+        .foregroundStyle(.white)
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
-        .background(.ultraThinMaterial, in: Capsule())
+        .background(Color.chrome, in: Capsule())
+        .overlay(Capsule().strokeBorder(Color.chromeLine))
+    }
+
+    /// Selettore della mappa su fondo scuro opaco, leggibile anche sopra
+    /// le carte chiare (OpenStreetMap, Topo).
+    private var mapPicker: some View {
+        HStack(spacing: 2) {
+            ForEach(MapKind.allCases) { kind in
+                let selected = kind == mapKind
+                Button {
+                    mapKind = kind
+                } label: {
+                    Text(kind.rawValue)
+                        .font(.footnote.weight(.bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .foregroundStyle(selected ? Color.ground : Color.white)
+                        .background(selected ? Color.beacon : Color.clear, in: Capsule())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selected ? .isSelected : [])
+            }
+        }
+        .padding(3)
+        .background(Color.chrome, in: Capsule())
+        .overlay(Capsule().strokeBorder(Color.chromeLine))
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Tipo di mappa")
     }
 
     private var readout: some View {
