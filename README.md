@@ -6,6 +6,7 @@
 | [`sito-personale/`](sito-personale/) | **Sito personale** — portfolio editoriale a sezioni con schede di progetto |
 | [`ecosuntek-monitor/`](ecosuntek-monitor/) | **Ecosuntek Monitor** — monitoraggio del titolo ECK con riassunto delle oscillazioni giornaliere |
 | [`dove-sono-ora/`](dove-sono-ora/) | **Dove Sono Ora** — posizione GPS su mappa satellitare, da condividere. Va aperta a pagina intera in `https://` (es. GitHub Pages): dentro un riquadro senza permesso il browser blocca il GPS |
+| [`ios/`](ios/) | **Dove Sono Ora per iPhone** — app nativa SwiftUI (progetto Xcode), con istruzioni per installarla sul telefono |
 
 Tutti sono statici, senza build e senza dipendenze esterne.
 
