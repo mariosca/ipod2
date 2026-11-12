@@ -46,9 +46,9 @@ extension Feed {
         make("La Stampa", "https://www.lastampa.it/rss/copertina.xml", .italia),
         make("Il Sole 24 Ore", "https://www.ilsole24ore.com/rss/italia.xml", .italia),
         make("Il Fatto Quotidiano", "https://www.ilfattoquotidiano.it/feed/", .italia),
-        make("Il Post", "https://www.ilpost.it/feed/", .italia),
+        make("Il Giornale", "https://www.ilgiornale.it/feed.xml", .italia),
         make("Il Messaggero", "https://www.ilmessaggero.it/rss/home.xml", .italia),
-        make("Avvenire", "https://www.avvenire.it/rss", .italia),
+        make("Il Mattino", "https://www.ilmattino.it/rss/home.xml", .italia),
         make("Rai News", "https://www.rainews.it/rss/tutti", .italia),
 
         make("BBC News", "https://feeds.bbci.co.uk/news/rss.xml", .estero),
@@ -63,5 +63,12 @@ extension Feed {
         make("Frankfurter Allgemeine", "https://www.faz.net/rss/aktuell/", .estero),
         make("Al Jazeera", "https://www.aljazeera.com/xml/rss/all.xml", .estero),
         make("NPR", "https://feeds.npr.org/1001/rss.xml", .estero),
+    ]
+
+    /// Feed dell'elenco iniziale che non funzionano più, con il giornale che li sostituisce.
+    /// Si applica anche agli elenchi già salvati sul telefono.
+    static let replacements: [String: Feed] = [
+        "https://www.ilpost.it/feed/": make("Il Giornale", "https://www.ilgiornale.it/feed.xml", .italia),
+        "https://www.avvenire.it/rss": make("Il Mattino", "https://www.ilmattino.it/rss/home.xml", .italia),
     ]
 }

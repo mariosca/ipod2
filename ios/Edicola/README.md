@@ -33,9 +33,9 @@ l'errore sotto il suo nome e lo si corregge da **Giornali**.
 | La Stampa | https://www.lastampa.it/rss/copertina.xml |
 | Il Sole 24 Ore | https://www.ilsole24ore.com/rss/italia.xml |
 | Il Fatto Quotidiano | https://www.ilfattoquotidiano.it/feed/ |
-| Il Post | https://www.ilpost.it/feed/ |
+| Il Giornale | https://www.ilgiornale.it/feed.xml |
 | Il Messaggero | https://www.ilmessaggero.it/rss/home.xml |
-| Avvenire | https://www.avvenire.it/rss |
+| Il Mattino | https://www.ilmattino.it/rss/home.xml |
 | Rai News | https://www.rainews.it/rss/tutti |
 
 ### Estero

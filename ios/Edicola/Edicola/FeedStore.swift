@@ -29,11 +29,25 @@ final class FeedStore {
     init() {
         if let data = UserDefaults.standard.data(forKey: Self.feedsKey),
            let saved = try? JSONDecoder().decode([Feed].self, from: data) {
-            feeds = saved
+            feeds = Self.applyingReplacements(saved)
         } else {
             feeds = Feed.defaults
         }
         snapshots = Self.loadCache()
+        saveFeeds()
+    }
+
+    /// Sostituisce i feed iniziali non più funzionanti, se non sono già stati
+    /// aggiunti i loro sostituti.
+    private static func applyingReplacements(_ saved: [Feed]) -> [Feed] {
+        let urls = Set(saved.map(\.url))
+        return saved.compactMap { feed in
+            guard let new = Feed.replacements[feed.url.absoluteString] else { return feed }
+            if urls.contains(new.url) { return nil }
+            var replaced = new
+            replaced.enabled = feed.enabled
+            return replaced
+        }
     }
 
     /// Giornali attivi di una zona, dal più aggiornato al meno recente.
