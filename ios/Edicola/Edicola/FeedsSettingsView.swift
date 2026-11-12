@@ -39,6 +39,8 @@ struct FeedsSettingsView: View {
                          + "Scorri a sinistra per eliminarlo.")
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(Color.paper)
             .navigationTitle("Giornali")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -135,6 +137,8 @@ struct FeedEditView: View {
                     Text("Di solito si trova in fondo alla pagina del giornale, alla voce RSS.")
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(Color.paper)
             .navigationTitle(draft.name.isEmpty ? "Nuovo giornale" : draft.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

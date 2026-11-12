@@ -34,10 +34,16 @@ struct HomeView: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 24)
             }
-            .background(Color(.systemGroupedBackground))
+            .background(Color.paper)
             .safeAreaInset(edge: .top, spacing: 0) { header }
-            .navigationTitle("Edicola")
+            .navigationTitle("Mario's Edicola")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Mario's Edicola")
+                        .font(.system(.title2, design: .serif).weight(.bold))
+                        .foregroundStyle(Color.brand)
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         showSettings = true
@@ -83,7 +89,7 @@ struct HomeView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
-        .background(.bar)
+        .background(Color.paper)
     }
 }
 
@@ -142,7 +148,9 @@ struct FeedCard: View {
             }
         }
         .padding(14)
-        .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 14))
+        .background(Color.white, in: RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(Color.brand.opacity(0.08)))
+        .shadow(color: Color.brand.opacity(0.06), radius: 6, y: 2)
         .contentShape(RoundedRectangle(cornerRadius: 14))
     }
 

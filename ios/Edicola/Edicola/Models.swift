@@ -1,4 +1,12 @@
 import Foundation
+import SwiftUI
+
+extension Color {
+    /// Viola del titolo e dei dettagli.
+    static let brand = Color(red: 0x6B / 255, green: 0x2F / 255, blue: 0xA0 / 255)
+    /// Sfondo chiaro delle schermate.
+    static let paper = Color(red: 0xFB / 255, green: 0xF9 / 255, blue: 0xFE / 255)
+}
 
 enum Region: String, Codable, CaseIterable, Identifiable {
     case italia

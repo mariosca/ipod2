@@ -32,6 +32,8 @@ struct FeedDetailView: View {
             }
         }
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .background(Color.paper)
         .navigationTitle(feed.name)
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await store.refresh([feed]) }

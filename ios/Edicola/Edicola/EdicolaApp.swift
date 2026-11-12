@@ -9,6 +9,9 @@ struct EdicolaApp: App {
         WindowGroup {
             HomeView()
                 .environment(store)
+                .tint(.brand)
+                // Sempre chiara, anche se l'iPhone è in modalità scura.
+                .preferredColorScheme(.light)
         }
     }
 }
