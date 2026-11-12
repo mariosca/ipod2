@@ -44,6 +44,31 @@ Con un Apple ID gratuito l'app resta firmata per **7 giorni**: dopo, ricollega
 l'iPhone e premi di nuovo Run. Con l'Apple Developer Program (99 €/anno) dura
 un anno e puoi distribuirla via TestFlight.
 
+## Apple Watch
+
+Il progetto contiene anche l'app per l'orologio (target **DoveSonoOraWatch**,
+watchOS 10 o successivo) con due mappe, che si alternano col pulsante in alto a
+destra:
+
+- **Topo**: OpenTopoMap con sentieri e curve di livello. Sull'orologio MapKit non
+  accetta mappe esterne, quindi la carta è disegnata a tessere dall'app:
+  **Digital Crown** per lo zoom (fino al livello 17), dito per spostarsi,
+  pulsante in alto a sinistra per tornare sulla tua posizione.
+- **Satellite**: la mappa satellitare di Apple.
+
+In basso: coordinate, altitudine e precisione. Il GPS si spegne quando l'app non
+è in primo piano, per risparmiare batteria. La carta Topo scarica le tessere da
+internet (Wi-Fi, iPhone vicino o rete cellulare dell'orologio); quelle già viste
+restano in cache.
+
+**Installarla**: con l'orologio abbinato all'iPhone e la **Modalità sviluppatore**
+attiva anche sull'orologio (Impostazioni › Privacy e sicurezza), in Xcode scegli
+lo schema **DoveSonoOraWatch** e come destinazione il tuo Apple Watch, poi ▶︎.
+Firma: Team anche per il target **DoveSonoOraWatch**. Il Bundle Identifier dei
+due target deriva da un'unica impostazione del progetto,
+`IOS_BUNDLE_IDENTIFIER` (progetto DoveSonoOra › Build Settings): se Xcode dice
+che è già in uso, cambia quella e non i singoli target.
+
 ## Senza Mac: la versione web da aggiungere alla Home
 
 La stessa app esiste come pagina web in [`../dove-sono-ora/`](../dove-sono-ora/),
@@ -68,6 +93,11 @@ DoveSonoOra/
   LocationModel.swift       CoreLocation: permesso, aggiornamenti, coordinate manuali
   Formatting.swift          gradi/primi/secondi, testo e link di condivisione
   Assets.xcassets           icona e colore d'accento
+DoveSonoOraWatch/
+  DoveSonoOraWatchApp.swift punto d'ingresso dell'app per Apple Watch
+  WatchContentView.swift    Satellite/Topo, pulsanti, coordinate
+  TopoMapView.swift         carta OpenTopoMap a tessere, Digital Crown e trascinamento
+  WatchLocation.swift       CoreLocation sull'orologio
 ```
 
 Il testo del permesso di posizione è nelle impostazioni di build
