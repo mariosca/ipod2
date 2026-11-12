@@ -4,7 +4,7 @@ App nativa SwiftUI (iOS 17+) che legge i feed RSS dei principali quotidiani
 italiani e stranieri e mostra le prime 10 notizie di ciascuno.
 
 - **Sezioni**: Italia, Estero, Economia, Tecnologia, IA, Programmazione,
-  Sicurezza, Scienza, Sport, Cultura, Design, Cucina, Videogiochi, Fumetti,
+  Sicurezza, Scienza, Sport, Cultura, Design, Cucina, Cucina vegana, Videogiochi, Fumetti,
   Podcast, YouTube e Reddit, in una fila scorrevole in alto. Si scaricano solo i
   feed della sezione che stai guardando.
 - **Vista d'insieme**: ogni giornale è un riquadro con il nome, da quanto è
@@ -80,6 +80,20 @@ Gli indirizzi `http://` sono stati portati a `https://` (iOS non scarica feed
 non cifrati): se uno di questi non risponde in https, compare in errore.
 Esclusi: i due feed del Wall Street Journal (tolto dall'elenco su richiesta), i
 doppioni di giornali già presenti e i bollettini tecnici di Bell Helicopter.
+
+### Cucina vegana
+
+Otto blog in italiano, con i feed scaricati e controllati prima di inserirli:
+Vegolosi (ricette vegane), Benvenuti a Las Vegans, Timo e lenticchie, greenMe
+(ricette vegan), Ortaggi che passione, Studenti ai fornelli, Anna e la sua
+cucina, In cucina con Mary (le ultime cinque sono blog di GialloZafferano, per
+alcune solo la categoria vegana). Quattordici in inglese, dall'elenco
+[Top Vegan RSS Feeds](https://rss.feedspot.com/vegan_rss_feeds/) di Feedspot:
+Vegan Richa, It Doesn't Taste Like Chicken, Pick Up Limes, Connoisseurus Veg,
+Lazy Cat Kitchen, Minimalist Baker, Nora Cooks, Rainbow Plant Life, Elavegan,
+Oh She Glows, The First Mess, The Plant Based School, The Vegan Italian Kitchen
+e VegNews. Esclusi VeganBlog.it (blocca le app) e Cucina Botanica (non ha un
+feed).
 
 ## Installarla sull'iPhone
 

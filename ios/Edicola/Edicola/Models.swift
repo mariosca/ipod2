@@ -23,6 +23,7 @@ enum Region: String, Codable, CaseIterable, Identifiable {
     case cultura
     case design
     case cucina
+    case vegana
     case videogiochi
     case fumetti
     case podcast
@@ -45,6 +46,7 @@ enum Region: String, Codable, CaseIterable, Identifiable {
         case .cultura: "Cultura"
         case .design: "Design"
         case .cucina: "Cucina"
+        case .vegana: "Cucina vegana"
         case .videogiochi: "Videogiochi"
         case .fumetti: "Fumetti"
         case .podcast: "Podcast"
@@ -67,6 +69,7 @@ enum Region: String, Codable, CaseIterable, Identifiable {
         case .cultura: "theatermasks"
         case .design: "paintpalette"
         case .cucina: "fork.knife"
+        case .vegana: "leaf"
         case .videogiochi: "gamecontroller"
         case .fumetti: "text.bubble"
         case .podcast: "mic"
@@ -130,7 +133,7 @@ extension Feed {
         make("Frankfurter Allgemeine", "https://www.faz.net/rss/aktuell/", .estero),
         make("Al Jazeera", "https://www.aljazeera.com/xml/rss/all.xml", .estero),
         make("NPR", "https://feeds.npr.org/1001/rss.xml", .estero),
-    ] + added(in: 3) + added(in: 4)
+    ] + added(in: 3) + added(in: 4) + added(in: 5)
 
     /// Modifiche all'elenco iniziale nel tempo, applicate anche agli elenchi già
     /// salvati sul telefono: tolgono i feed che non funzionano e aggiungono i nuovi.
@@ -303,6 +306,35 @@ extension Feed {
             make("r/books", "https://www.reddit.com/r/books/.rss", .reddit),
             make("r/programming", "https://www.reddit.com/r/programming/.rss", .reddit),
             make("r/MachineLearning", "https://www.reddit.com/r/MachineLearning/.rss", .reddit),
+         ]),
+        // Sezione Cucina vegana: blog di ricette vegane in italiano e in inglese.
+        (5,
+         [],
+         [
+            // In italiano (feed verificati)
+            make("Vegolosi – Ricette vegane", "https://www.vegolosi.it/ricette-vegane/feed/", .vegana),
+            make("Benvenuti a Las Vegans", "https://blog.giallozafferano.it/benvenutialasvegans/feed/", .vegana),
+            make("Timo e lenticchie", "https://blog.giallozafferano.it/timoelenticchie/feed/", .vegana),
+            make("greenMe – Ricette vegan", "https://www.greenme.it/tag/ricette-vegan/feed/", .vegana),
+            make("Ortaggi che passione", "https://blog.giallozafferano.it/ortaggichepassionebysara/feed/", .vegana),
+            make("Studenti ai fornelli – Vegane", "https://blog.giallozafferano.it/studentiaifornelli/category/ricette-vegane-per-alimentazione-vegetale/feed/", .vegana),
+            make("Anna e la sua cucina – Vegane", "https://blog.giallozafferano.it/annaelasuacucina/category/ricette-vegane/feed/", .vegana),
+            make("In cucina con Mary – Vegan", "https://blog.giallozafferano.it/incucinaconmary/category/vegan/feed/", .vegana),
+            // In inglese (da Feedspot, Top Vegan RSS Feeds)
+            make("Vegan Richa", "https://feeds.feedburner.com/blogspot/yPHzu", .vegana),
+            make("It Doesn't Taste Like Chicken", "https://itdoesnttastelikechicken.com/feed/", .vegana),
+            make("Pick Up Limes", "https://www.pickuplimes.com/recipe/latest-rss", .vegana),
+            make("Connoisseurus Veg", "https://www.connoisseurusveg.com/feed/", .vegana),
+            make("Lazy Cat Kitchen", "https://www.lazycatkitchen.com/feed/", .vegana),
+            make("Minimalist Baker – Vegan", "https://minimalistbaker.com/recipes/vegan/feed/", .vegana),
+            make("Nora Cooks", "https://www.noracooks.com/feed/", .vegana),
+            make("Rainbow Plant Life", "https://rainbowplantlife.com/feed/", .vegana),
+            make("Elavegan", "https://elavegan.com/feed/", .vegana),
+            make("Oh She Glows", "https://ohsheglows.com/feed/", .vegana),
+            make("The First Mess", "https://feeds.feedburner.com/TheFirstMess", .vegana),
+            make("The Plant Based School", "https://theplantbasedschool.com/feed/", .vegana),
+            make("The Vegan Italian Kitchen", "https://www.theveganitaliankitchen.com/blog-feed.xml", .vegana),
+            make("VegNews", "https://vegnews.com/feed.rss", .vegana),
          ]),
     ]
 
