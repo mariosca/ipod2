@@ -1,12 +1,26 @@
 # Dove Sono Ora — app per iPhone
 
-App nativa SwiftUI: mostra la tua posizione GPS su mappa satellitare/ibrida
-(Apple Maps), con latitudine e longitudine in gradi e decimali, precisione,
+App nativa SwiftUI: mostra la tua posizione GPS su mappa ibrida, satellitare o
+stradale (Apple Maps) oppure sulle carte OpenStreetMap per l'escursionismo
+(vedi sotto), con latitudine e longitudine in gradi e decimali, precisione,
 altitudine, velocità e direzione, e la condivide via WhatsApp, Telegram, SMS,
 email, foglio di condivisione di iOS o appunti. Se il permesso di posizione è
 negato puoi inserire le coordinate a mano.
 
 Nessuna chiave API, nessuna dipendenza esterna. iOS 17 o successivo.
+
+## Mappe
+
+| Pulsante | Mappa |
+| --- | --- |
+| Ibrido, Satellite, Mappa | Apple Maps |
+| OSM | Carta OpenStreetMap standard con sopra i sentieri segnati (Waymarked Trails) |
+| Topo | OpenTopoMap: sentieri, curve di livello e rilievo |
+
+Le carte OpenStreetMap vengono scaricate dai server pubblici del progetto e
+tenute in cache (fino a 300 MB). Servono internet: in zone senza campo restano
+visibili solo le zone già viste. Oltre lo zoom massimo del server la mappa
+ingrandisce l'ultima tessera disponibile. La scelta della mappa viene ricordata.
 
 ## Installarla sul tuo iPhone (gratis, serve un Mac)
 
@@ -49,7 +63,8 @@ la pagina non è dentro un riquadro.
 DoveSonoOra.xcodeproj       progetto Xcode (cartelle sincronizzate, Xcode 16+)
 DoveSonoOra/
   DoveSonoOraApp.swift      punto d'ingresso
-  ContentView.swift         mappa, pannello coordinate, condivisione
+  ContentView.swift         pannello coordinate, condivisione
+  MapView.swift             mappa (MKMapView), carte OpenStreetMap e OpenTopoMap
   LocationModel.swift       CoreLocation: permesso, aggiornamenti, coordinate manuali
   Formatting.swift          gradi/primi/secondi, testo e link di condivisione
   Assets.xcassets           icona e colore d'accento

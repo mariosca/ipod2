@@ -10,27 +10,11 @@ extension Color {
     static let inkFaint = Color(red: 0x6A / 255, green: 0x84 / 255, blue: 0x93 / 255)
 }
 
-enum MapKind: String, CaseIterable, Identifiable {
-    case hybrid = "Ibrido"
-    case satellite = "Satellite"
-    case standard = "Mappa"
-
-    var id: String { rawValue }
-
-    var style: MapStyle {
-        switch self {
-        case .hybrid: .hybrid(elevation: .realistic)
-        case .satellite: .imagery(elevation: .realistic)
-        case .standard: .standard(elevation: .realistic)
-        }
-    }
-}
-
 @MainActor
 struct ContentView: View {
     @State private var model = LocationModel()
-    @State private var camera: MapCameraPosition = .userLocation(fallback: .automatic)
-    @State private var mapKind: MapKind = .hybrid
+    @AppStorage("mapKind") private var mapKind: MapKind = .hybrid
+    @State private var recenterTick = 0
     @State private var showManual = false
     @State private var manualLat = ""
     @State private var manualLng = ""
@@ -56,7 +40,12 @@ struct ContentView: View {
             panel
         }
         .background(Color.ground)
-        .overlay(alignment: .top) { toastView }
+        .overlay(alignment: .top) {
+            VStack(spacing: 8) {
+                attribution
+                toastView
+            }
+        }
         .onAppear { model.start() }
         .onChange(of: scenePhase) { _, phase in
             // Al ritorno dalle Impostazioni il permesso potrebbe essere cambiato.
@@ -67,27 +56,24 @@ struct ContentView: View {
     // MARK: - Mappa
 
     private var map: some View {
-        Map(position: $camera) {
-            if model.source == .gps {
-                UserAnnotation()
-            }
-            if let c = model.coordinate {
-                if model.source == .manual {
-                    Marker("Posizione", coordinate: c).tint(Color.beacon)
-                }
-                if let acc = model.accuracy {
-                    MapCircle(center: c, radius: max(acc, 4))
-                        .foregroundStyle(Color.beacon.opacity(0.13))
-                        .stroke(Color.beacon.opacity(0.5), lineWidth: 1)
-                }
-            }
+        TrackingMapView(kind: mapKind,
+                        manualCoordinate: model.source == .manual ? model.coordinate : nil,
+                        hasGPSFix: model.source == .gps,
+                        recenterTick: recenterTick)
+            .ignoresSafeArea()
+    }
+
+    /// Crediti richiesti dalle mappe OpenStreetMap.
+    @ViewBuilder private var attribution: some View {
+        if let credits = mapKind.attribution {
+            Link(credits, destination: URL(string: "https://www.openstreetmap.org/copyright")!)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 4)
+                .background(.ultraThinMaterial, in: Capsule())
+                .padding(.horizontal, 16)
         }
-        .mapStyle(mapKind.style)
-        .mapControls {
-            MapCompass()
-            MapScaleView()
-        }
-        .ignoresSafeArea()
     }
 
     // MARK: - Pannello
@@ -215,7 +201,7 @@ struct ContentView: View {
             if model.source == .manual {
                 Button("GPS") {
                     model.resumeGPS()
-                    camera = .userLocation(fallback: .automatic)
+                    recenterTick += 1
                 }
                 .buttonStyle(.bordered)
             }
@@ -373,12 +359,8 @@ struct ContentView: View {
     // MARK: - Azioni
 
     private func recenter() {
-        if model.source == .manual, let c = model.coordinate {
-            camera = .region(MKCoordinateRegion(center: c, latitudinalMeters: 500, longitudinalMeters: 500))
-        } else {
-            model.start()
-            camera = .userLocation(fallback: .automatic)
-        }
+        if model.source != .manual { model.start() }
+        recenterTick += 1
     }
 
     private func applyManual() {
@@ -391,9 +373,6 @@ struct ContentView: View {
             return
         }
         model.useManual(latitude: la, longitude: lo)
-        camera = .region(MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: la, longitude: lo),
-            latitudinalMeters: 500, longitudinalMeters: 500))
         hideKeyboard()
     }
 
