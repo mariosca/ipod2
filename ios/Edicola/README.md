@@ -46,7 +46,6 @@ l'errore sotto il suo nome e lo si corregge da **Giornali**.
 | The Guardian | Regno Unito | https://www.theguardian.com/international/rss |
 | The New York Times | USA | https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml |
 | The Washington Post | USA | https://feeds.washingtonpost.com/rss/world |
-| The Wall Street Journal | USA | https://feeds.a.dj.com/rss/RSSWorldNews.xml |
 | NPR | USA | https://feeds.npr.org/1001/rss.xml |
 | Le Monde | Francia | https://www.lemonde.fr/rss/une.xml |
 | Le Figaro | Francia | https://www.lefigaro.fr/rss/figaro_actualites.xml |
@@ -54,9 +53,16 @@ l'errore sotto il suo nome e lo si corregge da **Giornali**.
 | Der Spiegel | Germania | https://www.spiegel.de/schlagzeilen/index.rss |
 | Frankfurter Allgemeine | Germania | https://www.faz.net/rss/aktuell/ |
 | Al Jazeera | Qatar | https://www.aljazeera.com/xml/rss/all.xml |
+| The Independent | Regno Unito | https://www.independent.co.uk/news/world/rss |
+| Süddeutsche Zeitung | Germania | https://rss.sueddeutsche.de/rss/Topthemen |
+| Neue Zürcher Zeitung | Svizzera | https://www.nzz.ch/recent.rss |
+| The Times of India | India | https://timesofindia.indiatimes.com/rssfeedstopstories.cms |
+| France 24 | Francia | https://www.france24.com/en/rss |
 
 Il primo elenco è in `Edicola/Models.swift` (`Feed.defaults`). Le modifiche
-fatte dall'app restano salvate sul telefono.
+fatte dall'app restano salvate sul telefono. Quando un feed dell'elenco iniziale
+viene tolto o aggiunto, la modifica va anche in `Feed.migrations`: così arriva
+pure a chi ha già l'app, senza far ricomparire i giornali che ha eliminato.
 
 Molti giornali offrono anche feed per sezione (politica, economia, sport…): di
 solito sono elencati in una pagina "RSS" linkata in fondo al sito. Si

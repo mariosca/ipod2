@@ -55,7 +55,6 @@ extension Feed {
         make("The Guardian", "https://www.theguardian.com/international/rss", .estero),
         make("The New York Times", "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml", .estero),
         make("The Washington Post", "https://feeds.washingtonpost.com/rss/world", .estero),
-        make("The Wall Street Journal", "https://feeds.a.dj.com/rss/RSSWorldNews.xml", .estero),
         make("Le Monde", "https://www.lemonde.fr/rss/une.xml", .estero),
         make("Le Figaro", "https://www.lefigaro.fr/rss/figaro_actualites.xml", .estero),
         make("El País", "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada", .estero),
@@ -63,12 +62,31 @@ extension Feed {
         make("Frankfurter Allgemeine", "https://www.faz.net/rss/aktuell/", .estero),
         make("Al Jazeera", "https://www.aljazeera.com/xml/rss/all.xml", .estero),
         make("NPR", "https://feeds.npr.org/1001/rss.xml", .estero),
+    ] + added(in: 3)
+
+    /// Modifiche all'elenco iniziale nel tempo, applicate anche agli elenchi già
+    /// salvati sul telefono: tolgono i feed che non funzionano e aggiungono i nuovi.
+    static let migrations: [(version: Int, remove: [String], add: [Feed])] = [
+        (2,
+         ["https://www.ilpost.it/feed/", "https://www.avvenire.it/rss"],
+         [
+            make("Il Giornale", "https://www.ilgiornale.it/feed.xml", .italia),
+            make("Il Mattino", "https://www.ilmattino.it/rss/home.xml", .italia),
+         ]),
+        (3,
+         ["https://feeds.a.dj.com/rss/RSSWorldNews.xml"],
+         [
+            make("The Independent", "https://www.independent.co.uk/news/world/rss", .estero),
+            make("Süddeutsche Zeitung", "https://rss.sueddeutsche.de/rss/Topthemen", .estero),
+            make("Neue Zürcher Zeitung", "https://www.nzz.ch/recent.rss", .estero),
+            make("The Times of India", "https://timesofindia.indiatimes.com/rssfeedstopstories.cms", .estero),
+            make("France 24", "https://www.france24.com/en/rss", .estero),
+         ]),
     ]
 
-    /// Feed dell'elenco iniziale che non funzionano più, con il giornale che li sostituisce.
-    /// Si applica anche agli elenchi già salvati sul telefono.
-    static let replacements: [String: Feed] = [
-        "https://www.ilpost.it/feed/": make("Il Giornale", "https://www.ilgiornale.it/feed.xml", .italia),
-        "https://www.avvenire.it/rss": make("Il Mattino", "https://www.ilmattino.it/rss/home.xml", .italia),
-    ]
+    static var latestVersion: Int { migrations.map(\.version).max() ?? 1 }
+
+    private static func added(in version: Int) -> [Feed] {
+        migrations.first { $0.version == version }?.add ?? []
+    }
 }

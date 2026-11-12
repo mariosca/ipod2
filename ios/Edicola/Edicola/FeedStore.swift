@@ -26,28 +26,35 @@ final class FeedStore {
     private static let feedsKey = "feeds.v1"
     nonisolated private static let articlesPerFeed = 10
 
+    private static let versionKey = "feedsVersion"
+
     init() {
-        if let data = UserDefaults.standard.data(forKey: Self.feedsKey),
+        let defaults = UserDefaults.standard
+        if let data = defaults.data(forKey: Self.feedsKey),
            let saved = try? JSONDecoder().decode([Feed].self, from: data) {
-            feeds = Self.applyingReplacements(saved)
+            // Gli elenchi salvati prima delle modifiche numerate partono dalla versione 1.
+            let version = max(defaults.integer(forKey: Self.versionKey), 1)
+            feeds = Self.migrate(saved, from: version)
         } else {
             feeds = Feed.defaults
         }
+        defaults.set(Feed.latestVersion, forKey: Self.versionKey)
         snapshots = Self.loadCache()
         saveFeeds()
     }
 
-    /// Sostituisce i feed iniziali non più funzionanti, se non sono già stati
-    /// aggiunti i loro sostituti.
-    private static func applyingReplacements(_ saved: [Feed]) -> [Feed] {
-        let urls = Set(saved.map(\.url))
-        return saved.compactMap { feed in
-            guard let new = Feed.replacements[feed.url.absoluteString] else { return feed }
-            if urls.contains(new.url) { return nil }
-            var replaced = new
-            replaced.enabled = feed.enabled
-            return replaced
+    /// Applica a un elenco salvato le modifiche successive alla sua versione.
+    /// Ogni modifica si applica una volta sola, quindi un giornale eliminato
+    /// dall'utente non ricompare.
+    private static func migrate(_ saved: [Feed], from version: Int) -> [Feed] {
+        var feeds = saved
+        for step in Feed.migrations where step.version > version {
+            feeds.removeAll { step.remove.contains($0.url.absoluteString) }
+            for feed in step.add where !feeds.contains(where: { $0.url == feed.url }) {
+                feeds.append(feed)
+            }
         }
+        return feeds
     }
 
     /// Giornali attivi di una zona, dal più aggiornato al meno recente.
