@@ -5,7 +5,8 @@ italiani e stranieri e mostra le prime 10 notizie di ciascuno.
 
 - **Intestazione**: la tua foto (toccala per sceglierla dalla galleria, tienila
   premuta per toglierla), il titolo "MARIO'S EDICOLA" e sotto la data e l'ora di
-  oggi, aggiornate ogni minuto. Toccando il titolo si apre una nuova email.
+  oggi, aggiornate ogni minuto. Tenendo premuto il titolo per 5 secondi si apre
+  una nuova email.
 - **Sezioni**: News - Ita, News - Eng, Economia, Tecnologia, IA, Programmazione,
   Sicurezza, Scienza, Sport, Cultura, Design, Cucina, Vegan Giuliana, Vegan Inglesi, Videogiochi, Fumetti,
   Podcast, YouTube e Reddit, in una fila scorrevole in alto. Si scaricano solo i

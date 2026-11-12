@@ -13,6 +13,8 @@ struct HomeView: View {
     @AppStorage("region") private var region: Region = .italia
     @State private var showSettings = false
     @State private var reading: WebLink?
+    @State private var pressingTitle = false
+    @State private var mailRequests = 0
     @Environment(\.openURL) private var openURL
 
     var body: some View {
@@ -85,28 +87,36 @@ struct HomeView: View {
         HStack(spacing: 12) {
             ProfilePhotoButton(size: 60)
 
-            Button {
-                // Nuova email, con il destinatario da scegliere nell'app Mail.
-                openURL(URL(string: "mailto:?subject=MARIO%27S%20EDICOLA")!)
-            } label: {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("MARIO'S EDICOLA")
-                        .font(.system(.title2, design: .serif).weight(.bold))
-                        .foregroundStyle(Color.brand)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                    TimelineView(.everyMinute) { context in
-                        Text(Self.today(context.date))
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .monospacedDigit()
-                    }
+            VStack(alignment: .leading, spacing: 2) {
+                Text("MARIO'S EDICOLA")
+                    .font(.system(.title2, design: .serif).weight(.bold))
+                    .foregroundStyle(Color.brand)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                TimelineView(.everyMinute) { context in
+                    Text(Self.today(context.date))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .monospacedDigit()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
-            .accessibilityHint("Scrivi una email")
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            // Mentre tieni premuto il titolo si schiarisce un poco.
+            .opacity(pressingTitle ? 0.6 : 1)
+            .animation(.easeInOut(duration: 0.2), value: pressingTitle)
+            // Tenendo premuto il titolo per 5 secondi si apre una nuova email,
+            // con il destinatario da scegliere nell'app Mail.
+            .onLongPressGesture(minimumDuration: 5) {
+                mailRequests += 1
+                openURL(URL(string: "mailto:?subject=MARIO%27S%20EDICOLA")!)
+            } onPressingChanged: { pressing in
+                pressingTitle = pressing
+            }
+            .sensoryFeedback(.success, trigger: mailRequests)
+            .accessibilityAction(named: "Scrivi una email") {
+                openURL(URL(string: "mailto:?subject=MARIO%27S%20EDICOLA")!)
+            }
 
             Button {
                 showSettings = true
