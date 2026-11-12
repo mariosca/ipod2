@@ -3,8 +3,9 @@
 App nativa SwiftUI (iOS 17+) che legge i feed RSS dei principali quotidiani
 italiani e stranieri e mostra le prime 10 notizie di ciascuno.
 
-- **Titolo e foto**: in alto "MARIO'S EDICOLA" con una foto tonda: toccala
-  per sceglierne una dalla galleria, tienila premuta per toglierla.
+- **Intestazione**: la tua foto (toccala per sceglierla dalla galleria, tienila
+  premuta per toglierla), il titolo "MARIO'S EDICOLA" e sotto la data e l'ora di
+  oggi, aggiornate ogni minuto. Toccando il titolo si apre una nuova email.
 - **Sezioni**: News - Ita, News - Eng, Economia, Tecnologia, IA, Programmazione,
   Sicurezza, Scienza, Sport, Cultura, Design, Cucina, Vegan Giuliana, Vegan Inglesi, Videogiochi, Fumetti,
   Podcast, YouTube e Reddit, in una fila scorrevole in alto. Si scaricano solo i

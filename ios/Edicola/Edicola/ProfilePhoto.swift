@@ -9,7 +9,11 @@ struct ProfilePhotoButton: View {
     @AppStorage("profilePhoto") private var photoData = Data()
     @State private var selection: PhotosPickerItem?
 
-    private let size: CGFloat = 34
+    let size: CGFloat
+
+    init(size: CGFloat = 34) {
+        self.size = size
+    }
 
     var body: some View {
         PhotosPicker(selection: $selection, matching: .images) {
@@ -45,7 +49,7 @@ struct ProfilePhotoButton: View {
                 .overlay(Circle().strokeBorder(Color.brand, lineWidth: 1.5))
         } else {
             Image(systemName: "person.crop.circle.badge.plus")
-                .font(.system(size: 22))
+                .font(.system(size: size * 0.6))
                 .foregroundStyle(Color.brand)
                 .frame(width: size, height: size)
                 .background(Color.brand.opacity(0.1), in: Circle())

@@ -13,6 +13,7 @@ struct HomeView: View {
     @AppStorage("region") private var region: Region = .italia
     @State private var showSettings = false
     @State private var reading: WebLink?
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
         NavigationStack {
@@ -37,26 +38,9 @@ struct HomeView: View {
             .background(Color.paper)
             .safeAreaInset(edge: .top, spacing: 0) { header }
             .navigationTitle("MARIO'S EDICOLA")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    HStack(spacing: 8) {
-                        ProfilePhotoButton()
-                        Text("MARIO'S EDICOLA")
-                            .font(.system(.title3, design: .serif).weight(.bold))
-                            .foregroundStyle(Color.brand)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-                    }
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Label("Giornali", systemImage: "slider.horizontal.3")
-                    }
-                }
-            }
+            // L'intestazione con foto, titolo e data sostituisce la barra di sistema,
+            // che non ha spazio per una foto più grande.
+            .toolbar(.hidden, for: .navigationBar)
             .refreshable { await store.refresh(region) }
             .navigationDestination(for: Feed.self) { FeedDetailView(feed: $0) }
             .sheet(isPresented: $showSettings) { FeedsSettingsView() }
@@ -76,6 +60,7 @@ struct HomeView: View {
 
     private var header: some View {
         VStack(spacing: 6) {
+            titleBar
             sectionPicker
 
             Group {
@@ -93,6 +78,56 @@ struct HomeView: View {
         }
         .padding(.vertical, 8)
         .background(Color.paper)
+    }
+
+    /// Foto, titolo con data e ora, pulsante dei giornali.
+    private var titleBar: some View {
+        HStack(spacing: 12) {
+            ProfilePhotoButton(size: 60)
+
+            Button {
+                // Nuova email, con il destinatario da scegliere nell'app Mail.
+                openURL(URL(string: "mailto:?subject=MARIO%27S%20EDICOLA")!)
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("MARIO'S EDICOLA")
+                        .font(.system(.title2, design: .serif).weight(.bold))
+                        .foregroundStyle(Color.brand)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                    TimelineView(.everyMinute) { context in
+                        Text(Self.today(context.date))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .monospacedDigit()
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Scrivi una email")
+
+            Button {
+                showSettings = true
+            } label: {
+                Image(systemName: "slider.horizontal.3")
+                    .font(.title3)
+                    .foregroundStyle(Color.brand)
+                    .frame(width: 40, height: 40)
+            }
+            .accessibilityLabel("Giornali")
+        }
+        .padding(.horizontal, 16)
+    }
+
+    /// "Giovedì 12 novembre 2026 · 17:42"
+    private static func today(_ date: Date) -> String {
+        let italian = Locale(identifier: "it_IT")
+        let day = date.formatted(.dateTime.weekday(.wide).day().month(.wide).year().locale(italian))
+        let time = date.formatted(.dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits)
+            .locale(italian))
+        return day.prefix(1).uppercased() + String(day.dropFirst()) + " · " + time
     }
 
     /// Sezioni in una fila scorrevole: quella scelta è viola.
