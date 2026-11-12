@@ -22,6 +22,10 @@ italiani e stranieri e mostra le prime 10 notizie di ciascuno.
   pulsante con il segnalibro in alto apre la lista, con un lettore che legge ad
   alta voce giornale, titolo e sommario di ogni articolo, uno dopo l'altro, con
   la voce italiana o inglese a seconda della lingua dell'articolo.
+- **WhatsApp**: tenendo premuta una notizia per 5 secondi (dentro un giornale o
+  in Da leggere) si apre WhatsApp con titolo e link pronti da inviare. Nei
+  riquadri della schermata principale la stessa voce è nel menu della pressione
+  lunga.
 - **Aggiornamento**: all'apertura, al ritorno nell'app dopo 10 minuti e
   tirando giù l'elenco. Le ultime notizie restano salvate e compaiono subito.
 - **Giornali** (icona in alto a destra): attiva o disattiva i giornali,
@@ -126,5 +130,6 @@ Edicola/
   FeedsSettingsView.swift   gestione dei giornali
   ReadingListView.swift     lista Da leggere, lettore e segnalibro
   Speaker.swift             lettura ad alta voce (AVSpeechSynthesizer)
+  WhatsAppShare.swift       invio su WhatsApp con la pressione di 5 secondi
   ProfilePhoto.swift        la foto accanto al titolo
 ```

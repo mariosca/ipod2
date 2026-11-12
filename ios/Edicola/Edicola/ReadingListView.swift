@@ -57,26 +57,23 @@ struct ReadingListView: View {
     private func row(_ item: SavedArticle, index: Int) -> some View {
         let isCurrent = speaker.current?.id == item.id
         return HStack(alignment: .top, spacing: 12) {
-            Button {
-                if let link = item.article.link { reading = WebLink(url: link) }
-            } label: {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(item.feedName.uppercased())
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Color.brand)
-                    Text(item.article.title)
-                        .font(.headline)
-                    if let summary = item.article.summary {
-                        Text(summary)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(2)
-                    }
+            VStack(alignment: .leading, spacing: 4) {
+                Text(item.feedName.uppercased())
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.brand)
+                Text(item.article.title)
+                    .font(.headline)
+                if let summary = item.article.summary {
+                    Text(summary)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
             }
-            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .articleGestures(item.article) {
+                if let link = item.article.link { reading = WebLink(url: link) }
+            }
 
             // Legge da questo articolo in poi.
             Button {

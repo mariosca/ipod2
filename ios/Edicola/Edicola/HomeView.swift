@@ -200,6 +200,7 @@ struct HomeView: View {
 @MainActor
 struct FeedCard: View {
     @Environment(FeedStore.self) private var store
+    @Environment(\.openURL) private var openURL
     let feed: Feed
     let open: (URL) -> Void
 
@@ -276,12 +277,16 @@ struct FeedCard: View {
         .contextMenu { saveMenuItem(article) }
     }
 
-    /// Tenendo premuta una notizia: aggiungila o toglila da "Da leggere".
-    private func saveMenuItem(_ article: Article) -> some View {
+    /// Tenendo premuta una notizia: aggiungila o toglila da "Da leggere",
+    /// oppure inviala su WhatsApp.
+    @ViewBuilder private func saveMenuItem(_ article: Article) -> some View {
         let saved = store.isSaved(article)
-        return Button(saved ? "Togli da Da leggere" : "Aggiungi a Da leggere",
-                      systemImage: saved ? "bookmark.slash" : "bookmark") {
+        Button(saved ? "Togli da Da leggere" : "Aggiungi a Da leggere",
+               systemImage: saved ? "bookmark.slash" : "bookmark") {
             store.toggleSaved(article, from: feed.name)
+        }
+        if let url = WhatsApp.shareURL(for: article) {
+            Button("Invia su WhatsApp", systemImage: "paperplane") { openURL(url) }
         }
     }
 }

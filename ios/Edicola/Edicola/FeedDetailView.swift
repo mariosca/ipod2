@@ -21,12 +21,10 @@ struct FeedDetailView: View {
             if let articles = snapshot?.articles {
                 ForEach(Array(articles.enumerated()), id: \.offset) { index, article in
                     HStack(alignment: .top, spacing: 4) {
-                        Button {
-                            if let link = article.link { reading = WebLink(url: link) }
-                        } label: {
-                            ArticleRow(index: index + 1, article: article)
-                        }
-                        .buttonStyle(.plain)
+                        ArticleRow(index: index + 1, article: article)
+                            .articleGestures(article) {
+                                if let link = article.link { reading = WebLink(url: link) }
+                            }
 
                         SaveButton(article: article, feedName: feed.name)
                     }
