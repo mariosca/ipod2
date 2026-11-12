@@ -20,8 +20,8 @@ struct HomeView: View {
                 LazyVStack(spacing: 14) {
                     let list = store.feeds(in: region)
                     if list.isEmpty {
-                        ContentUnavailableView("Nessun giornale",
-                                               systemImage: "newspaper",
+                        ContentUnavailableView("Nessun feed attivo",
+                                               systemImage: region.symbol,
                                                description: Text("Attivane qualcuno da Giornali."))
                     }
                     ForEach(list) { feed in
@@ -52,32 +52,31 @@ struct HomeView: View {
                     }
                 }
             }
-            .refreshable { await store.refreshAll() }
+            .refreshable { await store.refresh(region) }
             .navigationDestination(for: Feed.self) { FeedDetailView(feed: $0) }
             .sheet(isPresented: $showSettings) { FeedsSettingsView() }
             .sheet(item: $reading) { SafariView(url: $0.url).ignoresSafeArea() }
         }
-        .task {
-            if store.needsRefresh { await store.refreshAll() }
+        // Si riavvia quando cambi sezione o quando la sezione va riscaricata
+        // (per esempio dopo "Ripristina elenco iniziale").
+        .task(id: "\(region.rawValue)-\(store.lastRefresh[region] == nil)") {
+            if store.needsRefresh(region) { await store.refresh(region) }
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active, store.needsRefresh {
-                Task { await store.refreshAll() }
+            if phase == .active, store.needsRefresh(region) {
+                Task { await store.refresh(region) }
             }
         }
     }
 
     private var header: some View {
         VStack(spacing: 6) {
-            Picker("Zona", selection: $region) {
-                ForEach(Region.allCases) { Text($0.title).tag($0) }
-            }
-            .pickerStyle(.segmented)
+            sectionPicker
 
             Group {
                 if !store.loading.isEmpty {
                     Text("Aggiornamento in corso…")
-                } else if let last = store.lastRefresh {
+                } else if let last = store.lastRefresh[region] {
                     Text("Aggiornato alle " + last.formatted(date: .omitted, time: .shortened)
                          + " · dal più recente")
                 } else {
@@ -87,9 +86,37 @@ struct HomeView: View {
             .font(.caption)
             .foregroundStyle(.secondary)
         }
-        .padding(.horizontal, 16)
         .padding(.vertical, 8)
         .background(Color.paper)
+    }
+
+    /// Sezioni in una fila scorrevole: quella scelta è viola.
+    private var sectionPicker: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(Region.allCases) { section in
+                        let selected = section == region
+                        Button {
+                            withAnimation { region = section }
+                        } label: {
+                            Label(section.title, systemImage: section.symbol)
+                                .font(.subheadline.weight(.semibold))
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 7)
+                                .foregroundStyle(selected ? Color.white : Color.brand)
+                                .background(selected ? Color.brand : Color.white, in: Capsule())
+                                .overlay(Capsule().strokeBorder(Color.brand.opacity(selected ? 0 : 0.25)))
+                        }
+                        .buttonStyle(.plain)
+                        .id(section)
+                        .accessibilityAddTraits(selected ? .isSelected : [])
+                    }
+                }
+                .padding(.horizontal, 16)
+            }
+            .onAppear { proxy.scrollTo(region, anchor: .center) }
+        }
     }
 }
 

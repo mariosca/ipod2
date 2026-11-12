@@ -21,7 +21,8 @@ final class FeedStore {
     private(set) var snapshots: [UUID: FeedSnapshot] = [:]
     private(set) var errors: [UUID: String] = [:]
     private(set) var loading: Set<UUID> = []
-    private(set) var lastRefresh: Date?
+    /// Ultimo aggiornamento di ogni sezione.
+    private(set) var lastRefresh: [Region: Date] = [:]
 
     private static let feedsKey = "feeds.v1"
     nonisolated private static let articlesPerFeed = 10
@@ -68,25 +69,36 @@ final class FeedStore {
             }
     }
 
-    var needsRefresh: Bool {
-        guard let lastRefresh else { return true }
-        return Date().timeIntervalSince(lastRefresh) > 10 * 60
+    func needsRefresh(_ region: Region) -> Bool {
+        guard let last = lastRefresh[region] else { return true }
+        return Date().timeIntervalSince(last) > 10 * 60
     }
 
     // MARK: - Aggiornamento
 
-    func refreshAll() async {
-        await refresh(feeds.filter(\.enabled))
-        lastRefresh = Date()
+    /// Aggiorna solo la sezione che si sta guardando: scaricare tutti i feed
+    /// insieme sarebbe lento e consumerebbe dati.
+    func refresh(_ region: Region) async {
+        await refresh(feeds.filter { $0.enabled && $0.region == region })
+        lastRefresh[region] = Date()
     }
 
+    /// Download in parallelo, al massimo 8 alla volta.
     func refresh(_ targets: [Feed]) async {
+        let targets = targets.filter { !loading.contains($0.id) }
+        guard !targets.isEmpty else { return }
         loading.formUnion(targets.map(\.id))
         await withTaskGroup(of: (UUID, Result<FeedSnapshot, Error>).self) { group in
-            for feed in targets {
+            var pending = targets[...]
+            for _ in 0..<8 {
+                guard let feed = pending.popFirst() else { break }
                 group.addTask { (feed.id, await Self.fetch(feed.url)) }
             }
-            for await (id, result) in group {
+            while let next = await group.next() {
+                let (id, result) = next
+                if let feed = pending.popFirst() {
+                    group.addTask { (feed.id, await Self.fetch(feed.url)) }
+                }
                 loading.remove(id)
                 switch result {
                 case .success(let snapshot):
@@ -164,9 +176,9 @@ final class FeedStore {
         feeds = Feed.defaults
         snapshots = [:]
         errors = [:]
+        lastRefresh = [:]
         saveFeeds()
         saveCache()
-        Task { await refreshAll() }
     }
 
     // MARK: - Salvataggio

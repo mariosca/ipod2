@@ -3,7 +3,10 @@
 App nativa SwiftUI (iOS 17+) che legge i feed RSS dei principali quotidiani
 italiani e stranieri e mostra le prime 10 notizie di ciascuno.
 
-- **Italia / Estero**: il selettore in alto divide i giornali per zona.
+- **Sezioni**: Italia, Estero, Economia, Tecnologia, IA, Programmazione,
+  Sicurezza, Scienza, Sport, Cultura, Design, Cucina, Videogiochi, Fumetti,
+  Podcast, YouTube e Reddit, in una fila scorrevole in alto. Si scaricano solo i
+  feed della sezione che stai guardando.
 - **Vista d'insieme**: ogni giornale è un riquadro con il nome, da quanto è
   aggiornato e le prime tre notizie (la prima con foto, se il feed la fornisce).
   I riquadri sono ordinati **dal giornale aggiornato più di recente**.
@@ -68,6 +71,15 @@ Molti giornali offrono anche feed per sezione (politica, economia, sport…): di
 solito sono elencati in una pagina "RSS" linkata in fondo al sito. Si
 aggiungono da **Giornali › Aggiungi giornale**. L'app accetta solo indirizzi
 `https://`.
+
+### Le altre sezioni
+
+Vengono dalla pagina [I migliori feed RSS](https://feeder.co/it/knowledge-base/rss-content/popular-rss-feeds/)
+di Feeder: 149 feed, nella sezione `Feed.migrations` versione 4 di `Models.swift`.
+Gli indirizzi `http://` sono stati portati a `https://` (iOS non scarica feed
+non cifrati): se uno di questi non risponde in https, compare in errore.
+Esclusi: i due feed del Wall Street Journal (tolto dall'elenco su richiesta), i
+doppioni di giornali già presenti e i bollettini tecnici di Bell Helicopter.
 
 ## Installarla sull'iPhone
 
