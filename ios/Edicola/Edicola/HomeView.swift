@@ -36,13 +36,18 @@ struct HomeView: View {
             }
             .background(Color.paper)
             .safeAreaInset(edge: .top, spacing: 0) { header }
-            .navigationTitle("Mario's Edicola")
+            .navigationTitle("MARIO'S EDICOLA")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Mario's Edicola")
-                        .font(.system(.title2, design: .serif).weight(.bold))
-                        .foregroundStyle(Color.brand)
+                    HStack(spacing: 8) {
+                        ProfilePhotoButton()
+                        Text("MARIO'S EDICOLA")
+                            .font(.system(.title3, design: .serif).weight(.bold))
+                            .foregroundStyle(Color.brand)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                    }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

@@ -35,8 +35,8 @@ enum Region: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .italia: "Italia"
-        case .estero: "Estero"
+        case .italia: "News - Ita"
+        case .estero: "News - Eng"
         case .economia: "Economia"
         case .tecnologia: "Tecnologia"
         case .ia: "IA"
