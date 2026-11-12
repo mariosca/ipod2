@@ -98,6 +98,19 @@ struct Article: Codable, Hashable {
     let imageURL: URL?
 }
 
+/// Un articolo messo nella lista "Da leggere".
+struct SavedArticle: Codable, Identifiable, Hashable {
+    let article: Article
+    let feedName: String
+    let savedAt: Date
+
+    var id: String { Self.key(for: article) }
+
+    static func key(for article: Article) -> String {
+        article.link?.absoluteString ?? article.title
+    }
+}
+
 /// Ultimo scaricamento riuscito di un feed.
 struct FeedSnapshot: Codable {
     /// Le prime notizie, nell'ordine scelto dal giornale.

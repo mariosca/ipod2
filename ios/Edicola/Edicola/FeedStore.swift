@@ -21,6 +21,8 @@ final class FeedStore {
     private(set) var snapshots: [UUID: FeedSnapshot] = [:]
     private(set) var errors: [UUID: String] = [:]
     private(set) var loading: Set<UUID> = []
+    /// Articoli messi da parte, dal più recente.
+    private(set) var saved: [SavedArticle] = []
     /// Ultimo aggiornamento di ogni sezione.
     private(set) var lastRefresh: [Region: Date] = [:]
 
@@ -28,6 +30,7 @@ final class FeedStore {
     nonisolated private static let articlesPerFeed = 10
 
     private static let versionKey = "feedsVersion"
+    private static let savedKey = "saved.v1"
 
     init() {
         let defaults = UserDefaults.standard
@@ -41,6 +44,10 @@ final class FeedStore {
         }
         defaults.set(Feed.latestVersion, forKey: Self.versionKey)
         snapshots = Self.loadCache()
+        if let data = defaults.data(forKey: Self.savedKey),
+           let list = try? JSONDecoder().decode([SavedArticle].self, from: data) {
+            saved = list
+        }
         saveFeeds()
     }
 
@@ -179,6 +186,39 @@ final class FeedStore {
         lastRefresh = [:]
         saveFeeds()
         saveCache()
+    }
+
+    // MARK: - Da leggere
+
+    func isSaved(_ article: Article) -> Bool {
+        let key = SavedArticle.key(for: article)
+        return saved.contains { $0.id == key }
+    }
+
+    func toggleSaved(_ article: Article, from feedName: String) {
+        let key = SavedArticle.key(for: article)
+        if let i = saved.firstIndex(where: { $0.id == key }) {
+            saved.remove(at: i)
+        } else {
+            saved.insert(SavedArticle(article: article, feedName: feedName, savedAt: Date()), at: 0)
+        }
+        saveSaved()
+    }
+
+    func removeSaved(at offsets: IndexSet) {
+        for index in offsets.sorted(by: >) { saved.remove(at: index) }
+        saveSaved()
+    }
+
+    func clearSaved() {
+        saved = []
+        saveSaved()
+    }
+
+    private func saveSaved() {
+        if let data = try? JSONEncoder().encode(saved) {
+            UserDefaults.standard.set(data, forKey: Self.savedKey)
+        }
     }
 
     // MARK: - Salvataggio

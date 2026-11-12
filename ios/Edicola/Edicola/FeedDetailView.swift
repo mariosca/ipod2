@@ -20,12 +20,24 @@ struct FeedDetailView: View {
             }
             if let articles = snapshot?.articles {
                 ForEach(Array(articles.enumerated()), id: \.offset) { index, article in
-                    Button {
-                        if let link = article.link { reading = WebLink(url: link) }
-                    } label: {
-                        ArticleRow(index: index + 1, article: article)
+                    HStack(alignment: .top, spacing: 4) {
+                        Button {
+                            if let link = article.link { reading = WebLink(url: link) }
+                        } label: {
+                            ArticleRow(index: index + 1, article: article)
+                        }
+                        .buttonStyle(.plain)
+
+                        SaveButton(article: article, feedName: feed.name)
                     }
-                    .buttonStyle(.plain)
+                    .swipeActions(edge: .leading) {
+                        Button {
+                            store.toggleSaved(article, from: feed.name)
+                        } label: {
+                            Label("Da leggere", systemImage: store.isSaved(article) ? "bookmark.slash" : "bookmark")
+                        }
+                        .tint(Color.brand)
+                    }
                 }
             } else if store.loading.contains(feed.id) {
                 ProgressView().frame(maxWidth: .infinity)

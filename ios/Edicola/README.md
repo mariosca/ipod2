@@ -17,6 +17,11 @@ italiani e stranieri e mostra le prime 10 notizie di ciascuno.
 - **Un giornale**: tocca il riquadro per vedere le sue prime 10 notizie con
   sommario; tocca una notizia per leggerla nel browser interno (con modalità
   lettura di Safari).
+- **Da leggere**: il segnalibro accanto a ogni notizia (o una pressione lunga sulle
+  notizie dei riquadri, o uno scorrimento verso destra) la mette da parte. Il
+  pulsante con il segnalibro in alto apre la lista, con un lettore che legge ad
+  alta voce giornale, titolo e sommario di ogni articolo, uno dopo l'altro, con
+  la voce italiana o inglese a seconda della lingua dell'articolo.
 - **Aggiornamento**: all'apertura, al ritorno nell'app dopo 10 minuti e
   tirando giù l'elenco. Le ultime notizie restano salvate e compaiono subito.
 - **Giornali** (icona in alto a destra): attiva o disattiva i giornali,
@@ -119,4 +124,7 @@ Edicola/
   HomeView.swift            Italia/Estero e vista d'insieme a riquadri
   FeedDetailView.swift      prime 10 notizie di un giornale, browser interno
   FeedsSettingsView.swift   gestione dei giornali
+  ReadingListView.swift     lista Da leggere, lettore e segnalibro
+  Speaker.swift             lettura ad alta voce (AVSpeechSynthesizer)
+  ProfilePhoto.swift        la foto accanto al titolo
 ```

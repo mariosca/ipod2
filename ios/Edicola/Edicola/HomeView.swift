@@ -12,6 +12,7 @@ struct HomeView: View {
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("region") private var region: Region = .italia
     @State private var showSettings = false
+    @State private var showReadingList = false
     @State private var reading: WebLink?
     @State private var pressingTitle = false
     @State private var mailRequests = 0
@@ -46,6 +47,7 @@ struct HomeView: View {
             .refreshable { await store.refresh(region) }
             .navigationDestination(for: Feed.self) { FeedDetailView(feed: $0) }
             .sheet(isPresented: $showSettings) { FeedsSettingsView() }
+            .sheet(isPresented: $showReadingList) { ReadingListView() }
             .sheet(item: $reading) { SafariView(url: $0.url).ignoresSafeArea() }
         }
         // Si riavvia quando cambi sezione o quando la sezione va riscaricata
@@ -84,7 +86,7 @@ struct HomeView: View {
 
     /// Foto, titolo con data e ora, pulsante dei giornali.
     private var titleBar: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 8) {
             ProfilePhotoButton(size: 60)
 
             VStack(alignment: .leading, spacing: 2) {
@@ -98,6 +100,8 @@ struct HomeView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .monospacedDigit()
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.85)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -117,6 +121,27 @@ struct HomeView: View {
             .accessibilityAction(named: "Scrivi una email") {
                 openURL(URL(string: "mailto:?subject=MARIO%27S%20EDICOLA")!)
             }
+
+            Button {
+                showReadingList = true
+            } label: {
+                Image(systemName: store.saved.isEmpty ? "bookmark" : "bookmark.fill")
+                    .font(.title3)
+                    .foregroundStyle(Color.brand)
+                    .frame(width: 40, height: 40)
+                    .overlay(alignment: .topTrailing) {
+                        if !store.saved.isEmpty {
+                            Text("\(store.saved.count)")
+                                .font(.caption2.weight(.bold))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 1)
+                                .background(Color.brand, in: Capsule())
+                                .offset(x: 2, y: 2)
+                        }
+                    }
+            }
+            .accessibilityLabel("Da leggere, \(store.saved.count) articoli")
 
             Button {
                 showSettings = true
@@ -217,6 +242,7 @@ struct FeedCard: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .buttonStyle(.plain)
+                    .contextMenu { saveMenuItem(article) }
                 }
             } else {
                 Text("In attesa delle notizie…")
@@ -247,6 +273,16 @@ struct FeedCard: View {
             }
         }
         .buttonStyle(.plain)
+        .contextMenu { saveMenuItem(article) }
+    }
+
+    /// Tenendo premuta una notizia: aggiungila o toglila da "Da leggere".
+    private func saveMenuItem(_ article: Article) -> some View {
+        let saved = store.isSaved(article)
+        return Button(saved ? "Togli da Da leggere" : "Aggiungi a Da leggere",
+                      systemImage: saved ? "bookmark.slash" : "bookmark") {
+            store.toggleSaved(article, from: feed.name)
+        }
     }
 }
 
